@@ -4,8 +4,16 @@ import ProductsContainer from "./ProductsContainer";
 import NavBar from "./NavBar";
 import axios from "axios";
 import ProductForm from "./ProductForm";
+import { useLocation } from "react-router";
 
-export default function GroceriesAppContainer() {
+export default function GroceriesAppContainer(userDetails) {
+  //https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
+  const location = useLocation();
+  const adminAcc = location.state.isAdmin;
+  const username = location.state.user;
+  //console.log(adminAcc);
+  //console.log(username);
+
   /////////// States ///////////
   const [productQuantity, setProductQuantity] = useState();
   const [cartList, setCartList] = useState([]);
@@ -197,7 +205,7 @@ export default function GroceriesAppContainer() {
   /////////Renderer
   return (
     <div>
-      <NavBar quantity={cartList.length} />
+      <NavBar quantity={cartList.length} username={username}/>
       <div className="GroceriesApp-Container">
         <ProductForm
           handleOnSubmit={handleOnSubmit}
@@ -205,6 +213,7 @@ export default function GroceriesAppContainer() {
           handleOnChange={handleOnChange}
           formData={formData}
           isEditing={isEditing}
+          isAdmin={adminAcc}
         />
         <ProductsContainer
           products={productList}
@@ -214,6 +223,7 @@ export default function GroceriesAppContainer() {
           productQuantity={productQuantity}
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
+          isAdmin={adminAcc}
         />
         <CartContainer
           cartList={cartList}

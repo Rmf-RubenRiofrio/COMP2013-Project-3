@@ -8,6 +8,7 @@ export default function ProductsContainer({
   productQuantity,
   handleEditProduct,
   handleDeleteProduct,
+  isAdmin,
 }) {
   return (
     <div className="ProductsContainer">
@@ -23,6 +24,7 @@ export default function ProductsContainer({
           }
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
+          isAdmin={isAdmin}
         />
       ))}
     </div>

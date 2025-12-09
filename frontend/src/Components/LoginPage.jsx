@@ -43,9 +43,25 @@ export default function LoginPage() {
             if(serverResponse.status == 201){
                 //set up cookies
                 Cookie.set("JWT-TOKEN", serverResponse.data.token);
-                //move to the main page (groceries app container)
-                navigation("/main");
+
+                //if the user has _01 in the username, they're an admin account
+                const username = serverResponse.data.user;
+
+                //https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
+                //console.log(username);
+                if(username.includes("_01")){
+                    //console.log("ADMIN");
+                    navigation("/main", {state: {user: username, isAdmin: true}});
+                }
+                else{
+                    //console.log("NO ADMIN");
+                    //move to the main page (groceries app container)
+                    navigation("/main", {state: {user: username, isAdmin: false}});
+                }
+                
             }
+
+            
         } 
         catch (err) {
             console.log(err);

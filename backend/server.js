@@ -116,7 +116,7 @@ server.post("/login", async (request, response) => {
         //if it gets here, both username and password are correct, so we can pass it through
         //*make a web token to use later*
         const webToken = jwt.sign({id: user._id /*auto made by mongo*/, username}, "SECRET");
-        return response.status(201).send({message: "LOGIN GOOD", token: webToken})
+        return response.status(201).send({message: "LOGIN GOOD", user:username, token: webToken})
       }
     }
   }
