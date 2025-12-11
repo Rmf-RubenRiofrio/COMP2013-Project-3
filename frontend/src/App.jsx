@@ -1,9 +1,11 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import GroceriesAppContainer from "./Components/GroceriesAppContainer";
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./Components/LoginPage";
 import UserRegister from "./Components/UserRegister";
+import PageNotFound from "./Components/PageNotFound"; // Zack
+import NotAuthorized from "./Components/NotAuthorized"; // Zack
 import axios from "axios";
 
 function App() {
@@ -12,16 +14,15 @@ function App() {
 
   //getting products from the database
   const getProducts = async () => {
-    try{
+    try {
       //use the get route for the products to fill in array
       const prodData = await axios.get("http://localhost:3000/products");
       //set the products array to be the data
       setProducts(await prodData.data);
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   //fills out the array on runtime
   useState(() => {
@@ -32,9 +33,18 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={ <LoginPage /> }/>
+          <Route path="/" element={<LoginPage />} />
           <Route path="/create-user" element={<UserRegister />} />
-          <Route path="/main" element={ <GroceriesAppContainer products={products}/> }/>
+          {/* Main Page */}
+          <Route
+            path="/main"
+            element={<GroceriesAppContainer products={products} />}
+          />
+          {/* Zack */}
+          {/* Unauthorized access route */}
+          <Route path="/not-authorized" element={<NotAuthorized />} />
+          {/* Page not found route */}
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>
     </>
