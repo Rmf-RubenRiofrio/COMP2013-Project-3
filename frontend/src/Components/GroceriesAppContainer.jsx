@@ -4,18 +4,21 @@ import ProductsContainer from "./ProductsContainer";
 import NavBar from "./NavBar";
 import axios from "axios";
 import ProductForm from "./ProductForm";
-import { useLocation } from "react-router";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { use } from "react";
 
 export default function GroceriesAppContainer(userDetails) {
   //https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
   const location = useLocation();
-  const adminAcc = location.state.isAdmin;
-  const username = location.state.user;
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const adminAcc = location.state?.isAdmin;
+  const username = location.state?.user;
   //console.log(adminAcc);
   //console.log(username);
 
   /////////// States ///////////
-  const [productQuantity, setProductQuantity] = useState();
+  const [productQuantity, setProductQuantity] = useState([]);
   const [cartList, setCartList] = useState([]);
   const [productList, setProductList] = useState([]);
   const [postResponse, setPostResponse] = useState("");
@@ -33,6 +36,30 @@ export default function GroceriesAppContainer(userDetails) {
     handleProductsFromDB();
   }, [postResponse]);
 
+  useEffect(() => {
+    if(id){
+      const productToEdit = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/products/${id}`);
+          const product = response.data;
+          setFormData({
+            productName: product.productName,
+            brand: product.brand,
+            image: product.image,
+            price: product.price,
+            _id: product._id,
+          });
+          setIsEditing(true);
+          setPostResponse("");
+        }catch (error) {
+          console.log("Error fetching product: ",error.message);
+          setPostResponse("Failed to load product. Please try again.");
+        } 
+      };
+      productToEdit();
+    }
+  }, [id]);
+
   ////////Handlers//////////
   const initialProductQuantity = (prods) =>
     prods.map((prod) => {
@@ -41,12 +68,14 @@ export default function GroceriesAppContainer(userDetails) {
 
   const handleProductsFromDB = async () => {
     try {
+      console.log("Fetching products from DB...");
       await axios.get("http://localhost:3000/products").then((result) => {
+        console.log("Products received:", result.data);
         setProductList(result.data);
         setProductQuantity(initialProductQuantity(result.data));
       });
     } catch (error) {
-      console.log(error.message);
+      console.log("Error fetching products:", error.message);
     }
   };
 
@@ -113,6 +142,7 @@ export default function GroceriesAppContainer(userDetails) {
       setIsEditing(false);
     } catch (error) {
       console.log(error.message);
+      setPostResponse("Failed to update product. Please try again.");
     }
   };
 

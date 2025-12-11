@@ -20,7 +20,7 @@ export default function ProductsContainer({
           handleRemoveQuantity={handleRemoveQuantity}
           handleAddToCart={handleAddToCart}
           productQuantity={
-            productQuantity.find((p) => p.id === product.id).quantity
+            productQuantity.find((p) => p.id === product.id)?.quantity || 0
           }
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
