@@ -40,6 +40,21 @@ server.get("/products", async (request, response) => {
   }
 });
 
+server.get("/products/:id", async (request, response) => {
+  const prodId = request.params.id;
+  try{
+    const product = await Product.findById(prodId);
+    if(product){
+      response.status(200).send(product);
+    }
+    else{
+      response.status(404).send({message: "Product not found"});
+    } 
+  }catch(error){
+    console.log(error.message);
+    response.status(500).send({message: "Error retrieving product"});
+  }});
+
 server.post("/add-product", async (request, response) => {
   const { productName, brand, image, price } = request.body;
   const id = crypto.randomUUID();
