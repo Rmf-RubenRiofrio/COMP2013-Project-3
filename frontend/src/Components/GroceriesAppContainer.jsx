@@ -205,7 +205,10 @@ export default function GroceriesAppContainer(userDetails) {
   /////////Renderer
   return (
     <div>
-      <NavBar quantity={cartList.length} username={username}/>
+      <NavBar quantity={cartList.length} username={username} />
+      <button style={{ backgroundColor: "green", color: "white" }}>
+        Add Product
+      </button>
       <div className="GroceriesApp-Container">
         <ProductForm
           handleOnSubmit={handleOnSubmit}
