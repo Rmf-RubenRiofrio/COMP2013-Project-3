@@ -38,12 +38,6 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/create-user" element={<UserRegister />} />
-          <Route
-            path="/main"
-            element={<GroceriesAppContainer products={products} />}
-          />
-          <Route path="/add-product" element={<AddProductPage />} />
-          <Route path="/not-authorized" element={<NotAuthorized />} />
           {/* Main Page */}
           {/* Protected route wrapper. Ensures authorization is checked before rendering /main*/}
           <Route element={<PrivateRoute />}>
@@ -57,6 +51,7 @@ function App() {
           <Route path="/not-authorized" element={<NotAuthorized />} />
           {/* Page not found route */}
           <Route path="*" element={<PageNotFound />} />
+          <Route path="/add-product" element={<AddProductPage />} />
         </Routes>
       </Router>
     </>
