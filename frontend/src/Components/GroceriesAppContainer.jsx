@@ -6,6 +6,7 @@ import axios from "axios";
 import ProductForm from "./ProductForm";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { use } from "react";
+import Cookie from "js-cookie"
 
 export default function GroceriesAppContainer(userDetails) {
   //https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
@@ -59,6 +60,14 @@ export default function GroceriesAppContainer(userDetails) {
       productToEdit();
     }
   }, [id]);
+
+  useEffect(() => {
+    const token = Cookie.get('JWT-TOKEN');
+    if (!token) {
+      console.log("No token found, redirecting to not-authorized");
+      navigate("/NotAuthorized");
+    }
+  }, [navigate]);
 
   ////////Handlers//////////
   const initialProductQuantity = (prods) =>
@@ -232,10 +241,15 @@ export default function GroceriesAppContainer(userDetails) {
   const handleClearCart = () => {
     setCartList([]);
   };
+
+  const handleLogout = () => {
+    Cookie.remove('JWT-TOKEN');
+    navigate("/");
+  };
   /////////Renderer
   return (
     <div>
-      <NavBar quantity={cartList.length} username={username}/>
+      <NavBar quantity={cartList.length} username={username} onLogout={handleLogout}/>
       <div className="GroceriesApp-Container">
         <ProductForm
           handleOnSubmit={handleOnSubmit}
