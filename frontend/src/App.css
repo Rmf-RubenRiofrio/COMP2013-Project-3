@@ -155,14 +155,17 @@ img {
 }
 
 .product-form {
-  width: 100%;
-  
+  width: 20%;
 }
 
 .formTable {
   width: 100%;
   text-align: center;
   justify-content: center;
+
+  .product-form{
+    width: 100%;
+  }
 }
 
 #edit-button {

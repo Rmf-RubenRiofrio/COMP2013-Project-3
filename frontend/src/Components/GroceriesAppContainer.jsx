@@ -281,6 +281,14 @@ export default function GroceriesAppContainer() {
       </button> : <p></p>}
       
       <div className="GroceriesApp-Container">
+        <ProductForm
+          handleOnSubmit={handleOnSubmit}
+          postResponse={postResponse}
+          handleOnChange={handleOnChange}
+          formData={formData}
+          isEditing={isEditing}
+          isAdmin={adminAcc}
+        />
         <ProductsContainer
           products={productList}
           handleAddQuantity={handleAddQuantity}
