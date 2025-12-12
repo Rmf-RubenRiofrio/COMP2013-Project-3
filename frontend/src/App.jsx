@@ -6,6 +6,7 @@ import LoginPage from "./Components/LoginPage";
 import UserRegister from "./Components/UserRegister";
 import PageNotFound from "./Components/PageNotFound"; // Zack
 import NotAuthorized from "./Components/NotAuthorized"; // Zack
+import PrivateRoute from "./Components/PrivateRoute"; // Zack
 import axios from "axios";
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
   };
 
   //fills out the array on runtime
-  useState(() => {
+  useEffect(() => {
     getProducts();
   }, []);
 
@@ -36,10 +37,13 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/create-user" element={<UserRegister />} />
           {/* Main Page */}
-          <Route
-            path="/main"
-            element={<GroceriesAppContainer products={products} />}
-          />
+          {/* Protected route wrapper. Ensures authorization is checked before rendering /main*/}
+          <Route element={<PrivateRoute />}>
+            <Route
+              path="/main"
+              element={<GroceriesAppContainer products={products} />}
+            />
+          </Route>
           {/* Zack */}
           {/* Unauthorized access route */}
           <Route path="/not-authorized" element={<NotAuthorized />} />
