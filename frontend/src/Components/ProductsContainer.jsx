@@ -8,7 +8,6 @@ export default function ProductsContainer({
   productQuantity,
   handleEditProduct,
   handleDeleteProduct,
-  isAdmin,
 }) {
   return (
     <div className="ProductsContainer">
@@ -20,11 +19,10 @@ export default function ProductsContainer({
           handleRemoveQuantity={handleRemoveQuantity}
           handleAddToCart={handleAddToCart}
           productQuantity={
-            productQuantity.find((p) => p.id === product.id).quantity
+            productQuantity.find((p) => p.id === product.id)?.quantity || 0
           }
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
-          isAdmin={isAdmin}
         />
       ))}
     </div>

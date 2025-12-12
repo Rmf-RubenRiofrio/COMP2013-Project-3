@@ -7,15 +7,38 @@ import ProductForm from "./ProductForm";
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router-dom";
 export default function GroceriesAppContainer(userDetails) {
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import Cookie from "js-cookie"
+
+export default function GroceriesAppContainer() {
   //https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
-  const location = useLocation();
-  const adminAcc = location.state.isAdmin;
-  const username = location.state.user;
+  const navigate = useNavigate();
+  const { id } = useParams();
+  
+  /*
+    -- This is unused, and the auth stuff will happen inside of each element that uses them,
+      so this will be commented out, but is here for its explination comments --
+
+    getting the cookie that was made earlier, I am using an @ to seperate the cookie string
+    from the user data, as the cookie will not contain any special characters
+    I know that to the right of the @, is the user's data 
+
+      - Sawyer
+ 
+  const userData = Cookie.get("JWT-TOKEN").split("@");
+  //I know that to the right of the # is the username, as the logic sets it up that way
+  const username = userData[1].split("#")[1];
+  //and to the left is the admin status (if they're authorized or not)
+  //I have the turnary as it has to be a boolean, and it returns as a string
+  const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
+  */
+
   //console.log(adminAcc);
   //console.log(username);
 
+
   /////////// States ///////////
-  const [productQuantity, setProductQuantity] = useState();
+  const [productQuantity, setProductQuantity] = useState([]);
   const [cartList, setCartList] = useState([]);
   const [productList, setProductList] = useState([]);
   const [postResponse, setPostResponse] = useState("");
@@ -38,6 +61,37 @@ export default function GroceriesAppContainer(userDetails) {
   const navigateToAddProd = () => {
     navigate("/add-product", { state: { isAdmin: adminAcc } });
   };
+  useEffect(() => {
+    if(id){
+      const productToEdit = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/products/${id}`);
+          const product = response.data;
+          setFormData({
+            productName: product.productName,
+            brand: product.brand,
+            image: product.image,
+            price: product.price,
+            _id: product._id,
+          });
+          setIsEditing(true);
+          setPostResponse("");
+        }catch (error) {
+          console.log("Error fetching product: ",error.message);
+          setPostResponse("Failed to load product. Please try again.");
+        } 
+      };
+      productToEdit();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const token = Cookie.get('JWT-TOKEN');
+    if (!token) {
+      console.log("No token found, redirecting to not-authorized");
+      navigate("/NotAuthorized");
+    }
+  }, [navigate]);
 
   ////////Handlers//////////
   const initialProductQuantity = (prods) =>
@@ -47,12 +101,14 @@ export default function GroceriesAppContainer(userDetails) {
 
   const handleProductsFromDB = async () => {
     try {
+      //console.log("Fetching products from DB...");
       await axios.get("http://localhost:3000/products").then((result) => {
+        //console.log("Products received:", result.data);
         setProductList(result.data);
         setProductQuantity(initialProductQuantity(result.data));
       });
     } catch (error) {
-      console.log(error.message);
+      console.log("Error fetching products:", error.message);
     }
   };
 
@@ -119,6 +175,7 @@ export default function GroceriesAppContainer(userDetails) {
       setIsEditing(false);
     } catch (error) {
       console.log(error.message);
+      setPostResponse("Failed to update product. Please try again.");
     }
   };
 
@@ -208,6 +265,11 @@ export default function GroceriesAppContainer(userDetails) {
   const handleClearCart = () => {
     setCartList([]);
   };
+
+  const handleLogout = () => {
+    Cookie.remove('JWT-TOKEN');
+    navigate("/");
+  };
   /////////Renderer
   return (
     <div>
@@ -218,6 +280,7 @@ export default function GroceriesAppContainer(userDetails) {
       >
         Add Product
       </button>
+      <NavBar quantity={cartList.length} onLogout={handleLogout}/>
       <div className="GroceriesApp-Container">
         <ProductForm
           handleOnSubmit={handleOnSubmit}
@@ -225,7 +288,6 @@ export default function GroceriesAppContainer(userDetails) {
           handleOnChange={handleOnChange}
           formData={formData}
           isEditing={isEditing}
-          isAdmin={adminAcc}
         />
         <ProductsContainer
           products={productList}
@@ -235,7 +297,6 @@ export default function GroceriesAppContainer(userDetails) {
           productQuantity={productQuantity}
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
-          isAdmin={adminAcc}
         />
         <CartContainer
           cartList={cartList}
