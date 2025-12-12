@@ -6,6 +6,7 @@ import LoginPage from "./Components/LoginPage";
 import UserRegister from "./Components/UserRegister";
 import axios from "axios";
 import AddProductPage from "./Components/AddProductPage";
+import NotAuthorized from "./Components/NotAuthorized";
 
 function App() {
   //will hold products from the database
@@ -39,6 +40,7 @@ function App() {
             element={<GroceriesAppContainer products={products} />}
           />
           <Route path="/add-product" element={<AddProductPage />} />
+          <Route path="/not-authorized" element={<NotAuthorized />} />
         </Routes>
       </Router>
     </>
