@@ -4,6 +4,9 @@ import ProductsContainer from "./ProductsContainer";
 import NavBar from "./NavBar";
 import axios from "axios";
 import ProductForm from "./ProductForm";
+import { useLocation } from "react-router";
+import { useNavigate } from "react-router-dom";
+export default function GroceriesAppContainer(userDetails) {
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import Cookie from "js-cookie"
 
@@ -53,6 +56,11 @@ export default function GroceriesAppContainer() {
     handleProductsFromDB();
   }, [postResponse]);
 
+  // Navigate to add product page
+  const navigate = useNavigate();
+  const navigateToAddProd = () => {
+    navigate("/add-product", { state: { isAdmin: adminAcc } });
+  };
   useEffect(() => {
     if(id){
       const productToEdit = async () => {
@@ -265,6 +273,13 @@ export default function GroceriesAppContainer() {
   /////////Renderer
   return (
     <div>
+      <NavBar quantity={cartList.length} username={username} />
+      <button
+        onClick={navigateToAddProd}
+        style={{ backgroundColor: "green", color: "white" }}
+      >
+        Add Product
+      </button>
       <NavBar quantity={cartList.length} onLogout={handleLogout}/>
       <div className="GroceriesApp-Container">
         <ProductForm

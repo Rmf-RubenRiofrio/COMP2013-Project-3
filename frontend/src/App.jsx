@@ -8,6 +8,8 @@ import PageNotFound from "./Components/PageNotFound"; // Zack
 import NotAuthorized from "./Components/NotAuthorized"; // Zack
 import PrivateRoute from "./Components/PrivateRoute"; // Zack
 import axios from "axios";
+import AddProductPage from "./Components/AddProductPage";
+import NotAuthorized from "./Components/NotAuthorized";
 import ProductForm from "./Components/ProductForm";
 
 function App() {
@@ -37,6 +39,12 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/create-user" element={<UserRegister />} />
+          <Route
+            path="/main"
+            element={<GroceriesAppContainer products={products} />}
+          />
+          <Route path="/add-product" element={<AddProductPage />} />
+          <Route path="/not-authorized" element={<NotAuthorized />} />
           {/* Main Page */}
           {/* Protected route wrapper. Ensures authorization is checked before rendering /main*/}
           <Route element={<PrivateRoute />}>
