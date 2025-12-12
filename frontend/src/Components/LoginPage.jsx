@@ -42,23 +42,20 @@ export default function LoginPage() {
             //good login data
             if(serverResponse.status == 201){
                 //set up cookies
-                Cookie.set("JWT-TOKEN", serverResponse.data.token);
+                /*
+                    when the server sends the data over, it contains the token, admin authorization and username
+                    I can use this logic to set it up in a manageable way, so I know what data will occur where
 
-                //if the user has _01 in the username, they're an admin account
-                const username = serverResponse.data.user;
+                    in this case, there is 2 "seperation points", being the @ and #:
+                        @ seperates the token from the user's data (admin status and name)
+                        # seperates the admin status and username from eachother
 
-                //https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
-                //console.log(username);
-                if(username.includes("_01")){
-                    //console.log("ADMIN");
-                    navigation("/main", {state: {user: username, isAdmin: true}});
-                }
-                else{
-                    //console.log("NO ADMIN");
-                    //move to the main page (groceries app container)
-                    navigation("/main", {state: {user: username, isAdmin: false}});
-                }
-                
+                    this is used later to get data when needed
+                    
+                        - Sawyer
+                */
+                Cookie.set("JWT-TOKEN", serverResponse.data.token + "@" + serverResponse.data.status + "#" + serverResponse.data.user);
+                navigation("/main")
             }
 
             

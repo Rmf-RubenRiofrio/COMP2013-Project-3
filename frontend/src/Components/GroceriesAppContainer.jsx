@@ -8,15 +8,28 @@ import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { use } from "react";
 import Cookie from "js-cookie"
 
-export default function GroceriesAppContainer(userDetails) {
+export default function GroceriesAppContainer() {
   //https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
-  const location = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const adminAcc = location.state?.isAdmin;
-  const username = location.state?.user;
+  
+  /*
+    getting the cookie that was made earlier, I am using an @ to seperate the cookie string
+    from the user data, as the cookie will not contain any special characters
+    I know that to the right of the @, is the user's data 
+
+      - Sawyer
+  */
+  const userData = Cookie.get("JWT-TOKEN").split("@");
+  //I know that to the right of the # is the username, as the logic sets it up that way
+  const username = userData[1].split("#")[1];
+  //and to the left is the admin status (if they're authorized or not)
+  // I have the turnary as it has to be a boolean, and it returns as a string
+  const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
+
   //console.log(adminAcc);
   //console.log(username);
+
 
   /////////// States ///////////
   const [productQuantity, setProductQuantity] = useState([]);

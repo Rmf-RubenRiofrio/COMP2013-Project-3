@@ -130,8 +130,17 @@ server.post("/login", async (request, response) => {
       else{
         //if it gets here, both username and password are correct, so we can pass it through
         //*make a web token to use later*
+        // check for admin (auto to false)
+        let isAdmin = false;
+        if(username.includes("_01")){
+          //if the username has _01, its an admin and it will alter the boolean to respect that
+          isAdmin = true;
+        }
+        //create the web token
         const webToken = jwt.sign({id: user._id /*auto made by mongo*/, username}, "SECRET");
-        return response.status(201).send({message: "LOGIN GOOD", user:username, token: webToken})
+        //the response will return the token, username, and admin status, which will be used later
+        // to signify parts of the data to use for authorization
+        return response.status(201).send({message: "LOGIN GOOD", user:username, token: webToken, status: isAdmin})
       }
     }
   }
@@ -164,4 +173,15 @@ server.post("/addUser", async (request, response) => {
   catch (err) {
     console.log(err);
   }
+});
+
+server.get("/getStatus", async (request, response) => {
+  console.log("IN GET STATUS");
+
+  const cookieSTR = request.body;
+  const decode = jwt.decode(cookieSTR);
+
+  console.log(decode);
+
+  response.status(201).send({user: JSON.stringify(decode.user), admin: JSON.stringify(decode.isAdmin)});
 });
