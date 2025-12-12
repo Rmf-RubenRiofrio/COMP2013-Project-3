@@ -1,4 +1,5 @@
 import QuantityCounter from "./QuantityCounter";
+import Cookie from "js-cookie"
 
 export default function ProductCard({
   productName,
@@ -13,9 +14,11 @@ export default function ProductCard({
   handleEditProduct,
   _id,
   handleDeleteProduct,
-  isAdmin,
 }) {
-  if(isAdmin){
+
+  const userData = Cookie.get("JWT-TOKEN").split("@");
+  const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
+  if(adminAcc){
     return (
       <div className="ProductCard">
         <h3>{productName}</h3>

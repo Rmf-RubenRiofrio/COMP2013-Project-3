@@ -1,4 +1,10 @@
-export default function NavBar({ quantity, username, onLogout }) {
+import Cookie from "js-cookie"
+
+export default function NavBar({ quantity, onLogout }) {
+    const userData = Cookie.get("JWT-TOKEN").split("@");
+    //I know that to the right of the # is the username, as the logic sets it up that way
+    const username = userData[1].split("#")[1];
+
     return (
       <nav className="NavBar">
         <div className="NavDiv NavUser">

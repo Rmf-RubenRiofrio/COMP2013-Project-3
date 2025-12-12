@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Cookie from "js-cookie"
 
 export default function ProductForm({
   handleOnSubmit,
@@ -6,10 +6,12 @@ export default function ProductForm({
   formData,
   postResponse,
   isEditing,
-  isAdmin,
 }) {
+
+  const userData = Cookie.get("JWT-TOKEN").split("@");
+  const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
   //console.log(isAdmin);
-  if(isAdmin === true){
+  if(adminAcc === true){
      return (
       <div className="product-form">
         <h2>Product Form</h2>
@@ -61,7 +63,10 @@ export default function ProductForm({
   }
   else{
     return(
-      <h1>Not an admin ACC</h1>
+      //this is here to keep the formating without having text (I love tab spacing with html (-_-))
+      <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>
     )
   }
  

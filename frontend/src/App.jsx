@@ -8,6 +8,7 @@ import PageNotFound from "./Components/PageNotFound"; // Zack
 import NotAuthorized from "./Components/NotAuthorized"; // Zack
 import PrivateRoute from "./Components/PrivateRoute"; // Zack
 import axios from "axios";
+import ProductForm from "./Components/ProductForm";
 
 function App() {
   //will hold products from the database

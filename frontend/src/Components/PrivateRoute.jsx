@@ -14,7 +14,7 @@ import Cookies from "js-cookie";
 */
 
 export default function PrivateRoute() {
-  const jwtToken = Cookies.get("jwt-authorization");
+  const jwtToken = Cookies.get("JWT-TOKEN");
 
   if (!jwtToken) {
     // Redirect unauthorized users before protected components mount

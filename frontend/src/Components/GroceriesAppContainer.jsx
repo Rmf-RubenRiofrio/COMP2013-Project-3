@@ -5,7 +5,6 @@ import NavBar from "./NavBar";
 import axios from "axios";
 import ProductForm from "./ProductForm";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { use } from "react";
 import Cookie from "js-cookie"
 
 export default function GroceriesAppContainer() {
@@ -14,18 +13,22 @@ export default function GroceriesAppContainer() {
   const { id } = useParams();
   
   /*
+    -- This is unused, and the auth stuff will happen inside of each element that uses them,
+      so this will be commented out, but is here for its explination comments --
+
     getting the cookie that was made earlier, I am using an @ to seperate the cookie string
     from the user data, as the cookie will not contain any special characters
     I know that to the right of the @, is the user's data 
 
       - Sawyer
-  */
+ 
   const userData = Cookie.get("JWT-TOKEN").split("@");
   //I know that to the right of the # is the username, as the logic sets it up that way
   const username = userData[1].split("#")[1];
   //and to the left is the admin status (if they're authorized or not)
-  // I have the turnary as it has to be a boolean, and it returns as a string
+  //I have the turnary as it has to be a boolean, and it returns as a string
   const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
+  */
 
   //console.log(adminAcc);
   //console.log(username);
@@ -90,9 +93,9 @@ export default function GroceriesAppContainer() {
 
   const handleProductsFromDB = async () => {
     try {
-      console.log("Fetching products from DB...");
+      //console.log("Fetching products from DB...");
       await axios.get("http://localhost:3000/products").then((result) => {
-        console.log("Products received:", result.data);
+        //console.log("Products received:", result.data);
         setProductList(result.data);
         setProductQuantity(initialProductQuantity(result.data));
       });
@@ -262,7 +265,7 @@ export default function GroceriesAppContainer() {
   /////////Renderer
   return (
     <div>
-      <NavBar quantity={cartList.length} username={username} onLogout={handleLogout}/>
+      <NavBar quantity={cartList.length} onLogout={handleLogout}/>
       <div className="GroceriesApp-Container">
         <ProductForm
           handleOnSubmit={handleOnSubmit}
@@ -270,7 +273,6 @@ export default function GroceriesAppContainer() {
           handleOnChange={handleOnChange}
           formData={formData}
           isEditing={isEditing}
-          isAdmin={adminAcc}
         />
         <ProductsContainer
           products={productList}
@@ -280,7 +282,6 @@ export default function GroceriesAppContainer() {
           productQuantity={productQuantity}
           handleEditProduct={handleEditProduct}
           handleDeleteProduct={handleDeleteProduct}
-          isAdmin={adminAcc}
         />
         <CartContainer
           cartList={cartList}
