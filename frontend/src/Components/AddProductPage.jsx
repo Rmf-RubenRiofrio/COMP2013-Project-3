@@ -1,10 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
+import Cookie from "js-cookie";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import ProductForm from "./ProductForm";
 export default function AddProductPage() {
+  const nav = useNavigate();
+  useEffect(() => {
+    checkValid();
+  }, []);
+
+  const checkValid = () => {
+    const userData = Cookie.get("JWT-TOKEN").split("@");
+    const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
+
+    if(!adminAcc){
+      nav("/not-authorized");
+    }
+  }
+
+  
+
   const [postResponse, setPostResponse] = useState("");
 
   const [formData, setFormData] = useState({
@@ -12,40 +27,6 @@ export default function AddProductPage() {
     brand: "",
     image: "",
     price: "",
-  });
-
-  const [currentUser, setCurrentUser] = useState(() => {
-    const jwt = Cookies.get("JWT-TOKEN");
-    if (!jwt) {
-      return "";
-    }
-    try {
-      const decodedToken = jwtDecode(jwt);
-      return decodedToken.username;
-    } catch (error) {
-      return "";
-    }
-  });
-
-  const location = useLocation();
-  const isAdmin = location?.state?.isAdmin || false;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const jwt = Cookies.get("JWT-TOKEN");
-    if (!jwt) {
-      setCurrentUser("");
-    }
-    try {
-      const decodedToken = jwtDecode(jwt);
-      setCurrentUser(decodedToken.username);
-    } catch (error) {
-      setCurrentUser("");
-    }
-    if (currentUser === "" || !isAdmin) {
-      navigate("/not-authorized");
-      return;
-    }
   });
 
   // handlers
@@ -72,16 +53,22 @@ export default function AddProductPage() {
     }
   };
   return (
-    <div>
-      <ProductForm
-        handleOnChange={handleOnChange}
-        handleOnSubmit={handleOnSubmit}
-        formData={formData}
-        postResponse={postResponse}
-        isEditing={false}
-        isAdmin={true}
-      />
-      <Link to="/main">Back to main</Link>
-    </div>
+    <>
+      <table className="formTable">
+        <tr>
+          <ProductForm
+            handleOnChange={handleOnChange}
+            handleOnSubmit={handleOnSubmit}
+            formData={formData}
+            postResponse={postResponse}
+            isEditing={false}
+            isAdmin={true}
+          />
+        </tr>
+        <tr>
+          <Link to="/main">Back to main</Link>
+        </tr>
+      </table> 
+    </>
   );
 }

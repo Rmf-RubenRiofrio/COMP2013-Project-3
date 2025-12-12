@@ -9,7 +9,6 @@ import NotAuthorized from "./Components/NotAuthorized"; // Zack
 import PrivateRoute from "./Components/PrivateRoute"; // Zack
 import axios from "axios";
 import AddProductPage from "./Components/AddProductPage";
-import NotAuthorized from "./Components/NotAuthorized";
 import ProductForm from "./Components/ProductForm";
 
 function App() {

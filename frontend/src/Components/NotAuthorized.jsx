@@ -7,7 +7,7 @@ export default function NotAuthorized() {
     <div>
       {/* Simple not authorized message with link to login page */}
       <h1>You are not authorized to visit this page 🙁</h1>
-      <Link to={"/"}>Back to login page</Link>
+      <Link to={"/main"}>Back to main page</Link>
     </div>
   );
 }

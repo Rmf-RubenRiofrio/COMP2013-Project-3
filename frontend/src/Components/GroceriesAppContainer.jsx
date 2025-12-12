@@ -4,9 +4,6 @@ import ProductsContainer from "./ProductsContainer";
 import NavBar from "./NavBar";
 import axios from "axios";
 import ProductForm from "./ProductForm";
-import { useLocation } from "react-router";
-import { useNavigate } from "react-router-dom";
-export default function GroceriesAppContainer(userDetails) {
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import Cookie from "js-cookie"
 
@@ -32,6 +29,8 @@ export default function GroceriesAppContainer() {
   //I have the turnary as it has to be a boolean, and it returns as a string
   const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
   */
+ const userData = Cookie.get("JWT-TOKEN").split("@");
+ const adminAcc = (userData[1].split("#")[0] == "true") ? (true) : (false);
 
   //console.log(adminAcc);
   //console.log(username);
@@ -57,9 +56,8 @@ export default function GroceriesAppContainer() {
   }, [postResponse]);
 
   // Navigate to add product page
-  const navigate = useNavigate();
   const navigateToAddProd = () => {
-    navigate("/add-product", { state: { isAdmin: adminAcc } });
+    navigate("/add-product");
   };
   useEffect(() => {
     if(id){
@@ -273,22 +271,16 @@ export default function GroceriesAppContainer() {
   /////////Renderer
   return (
     <div>
-      <NavBar quantity={cartList.length} username={username} />
-      <button
+      <NavBar quantity={cartList.length} onLogout={handleLogout}/>
+      {/* only render button if the user is an admin */
+      adminAcc == true ? <button
         onClick={navigateToAddProd}
         style={{ backgroundColor: "green", color: "white" }}
       >
         Add Product
-      </button>
-      <NavBar quantity={cartList.length} onLogout={handleLogout}/>
+      </button> : <p></p>}
+      
       <div className="GroceriesApp-Container">
-        <ProductForm
-          handleOnSubmit={handleOnSubmit}
-          postResponse={postResponse}
-          handleOnChange={handleOnChange}
-          formData={formData}
-          isEditing={isEditing}
-        />
         <ProductsContainer
           products={productList}
           handleAddQuantity={handleAddQuantity}
